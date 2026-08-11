@@ -1,0 +1,230 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">G</span>
+    <span>GameVerse</span>
+  </div>
+
+  <nav class="nav" aria-label="Menu principal">
+    @for (item of navItems; track item) {
+      <a [href]="'#' + item.toLowerCase()">{{ item }}</a>
+    }
+  </nav>
+
+  <button class="cart-button" type="button">Carrinho ({{ cartCount }})</button>
+</header>
+
+<main class="page-shell">
+  <section class="hero" id="home">
+    <div class="hero-copy">
+      <p class="eyebrow">Loja oficial de games</p>
+      <h1>Seu próximo favorito começa aqui.</h1>
+      <p class="lead">
+        Descubra consoles, jogos e acessórios com tecnologia de ponta e ofertas que fazem a diferença.
+      </p>
+
+      <div class="hero-actions">
+        <a class="primary-btn" href="#produtos">Ver ofertas</a>
+        <a class="secondary-btn" href="#contato">Fale conosco</a>
+      </div>
+
+      <div class="stats-row">
+        @for (stat of stats; track stat.label) {
+          <div class="stat-item">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="image-card main-card">
+        <img
+          src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80"
+          alt="Pessoa jogando com console e controle"
+        />
+      </div>
+      <div class="floating-card">
+        <span class="float-label">Promoção</span>
+        <strong>Até 35% OFF</strong>
+        <small>em acessórios premium</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-strip" aria-label="Destaques da loja">
+    <div class="feature-item">
+      <span>⚡</span>
+      <p>Entrega rápida</p>
+    </div>
+    <div class="feature-item">
+      <span>🛡️</span>
+      <p>Compra segura</p>
+    </div>
+    <div class="feature-item">
+      <span>🎮</span>
+      <p>Produtos gamers</p>
+    </div>
+    <div class="feature-item">
+      <span>💬</span>
+      <p>Suporte humano</p>
+    </div>
+  </section>
+
+  <section class="products" id="produtos">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Produtos em destaque</p>
+        <h2>Seleção do mês</h2>
+      </div>
+      <a href="#contato">Ver todos</a>
+    </div>
+
+    <div class="filter-bar" aria-label="Filtros de categoria">
+      @for (category of categories; track category) {
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="selectedCategory === category"
+          (click)="applyFilter(category)"
+        >
+          {{ category }}
+        </button>
+      }
+    </div>
+
+    <div class="product-grid">
+      @for (product of filteredProducts; track product.name) {
+        <article class="product-card">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" />
+            <span class="tag">{{ product.tag }}</span>
+          </div>
+          <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <div class="product-footer">
+              <strong>{{ product.price }}</strong>
+              <button type="button" (click)="addToCart(product)">Comprar</button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <aside class="cart-panel">
+      <div class="cart-header">
+        <h3>Carrinho</h3>
+        <span>{{ cartCount }} itens</span>
+      </div>
+
+      @if (cartItems.length === 0) {
+        <p class="empty-cart">Seu carrinho está vazio.</p>
+      } @else {
+        <ul class="cart-list">
+          @for (item of cartItems; track item.name; let i = $index) {
+            <li>
+              <div>
+                <strong>{{ item.name }}</strong>
+                <small>R$ {{ item.price.toFixed(2).replace('.', ',') }}</small>
+              </div>
+              <button type="button" class="remove-btn" (click)="removeFromCart(i)">X</button>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="cart-total">
+        <span>Total</span>
+        <strong>R$ {{ cartTotal.toFixed(2).replace('.', ',') }}</strong>
+      </div>
+
+      @if (cartMessage) {
+        <p class="cart-message">{{ cartMessage }}</p>
+      }
+
+      <button type="button" class="checkout-btn" (click)="finishPurchase()">Finalizar compra</button>
+    </aside>
+  </section>
+
+  <section class="reviews">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Avaliações</p>
+        <h2>O que nossos clientes dizem</h2>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      @for (review of reviews; track review.name) {
+        <article class="review-card">
+          <div class="review-top">
+            <strong>{{ review.name }}</strong>
+            <span>{{ review.score }}</span>
+          </div>
+          <p>{{ review.text }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <div class="about-text">
+      <p class="eyebrow">Sobre a loja</p>
+      <h2>Mais do que um marketplace: uma experiência gamer completa.</h2>
+      <p>
+        A GameVerse nasceu para transformar a forma como você compra tecnologia e entretenimento. Aqui você encontra
+        qualidade, confiança e uma seleção pensada para os jogadores mais exigentes.
+      </p>
+
+      <ul class="benefits-list">
+        @for (benefit of benefits; track benefit) {
+          <li>{{ benefit }}</li>
+        }
+      </ul>
+    </div>
+
+    <div class="about-panel">
+      <div class="mini-stat">
+        <strong>98%</strong>
+        <span>dos clientes voltam a comprar</span>
+      </div>
+      <div class="mini-stat accent">
+        <strong>4.9/5</strong>
+        <span>avaliação média</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="contact-info">
+      <p class="eyebrow">Contato</p>
+      <h2>Vamos encontrar o setup ideal para você?</h2>
+      <p>Fale conosco para receber indicações personalizadas e ofertas exclusivas.</p>
+    </div>
+
+    <form class="contact-form" (submit)="onSubmit($event)">
+      <label>
+        Nome
+        <input id="nome" type="text" placeholder="Seu nome" />
+      </label>
+      <label>
+        E-mail
+        <input id="email" type="email" placeholder="seu@email.com" />
+      </label>
+      <label>
+        Mensagem
+        <textarea id="mensagem" rows="4" placeholder="Conte qual produto você procura..."></textarea>
+      </label>
+      <button type="submit">Enviar mensagem</button>
+
+      @if (contactMessage) {
+        <p class="success-message">{{ contactMessage }}</p>
+      }
+    </form>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>© 2026 GameVerse. Todos os direitos reservados.</p>
+</footer>
